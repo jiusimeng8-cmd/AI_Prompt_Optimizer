@@ -83,11 +83,10 @@ python main.py
 | 包名 | 版本 | 用途 |
 |------|------|------|
 | PyQt6 | ≥6.6.0 | 桌面GUI框架 |
-| openai | ≥1.30.0 | OpenAI兼容API调用 |
 | pyperclip | ≥1.9.0 | 剪切板操作 |
 | keyboard | ≥0.13.5 | 全局热键监听 |
 | pywin32 | ≥306 | Windows API调用 |
-| httpx | ≥0.27.0 | HTTP请求（openai依赖） |
+| httpx | ≥0.27.0 | OpenAI兼容HTTP API调用 |
 | uiautomation | ≥2.0.29 | Windows UI Automation 选区读取 |
 
 ## 打包为 EXE
@@ -119,6 +118,7 @@ pyinstaller build.spec
 - 全局快捷键选区读取优先使用 Windows UI Automation / Accessibility。
 - 剪贴板 fallback 只对白名单普通软件启用，避免 VS Code、Cursor、OpenCode、浏览器、终端等程序在无选区时复制当前行/当前块并误触发 API。
 - 设置页包含「API 设置」「通用」「快捷键」三个标签，点击「保存」后写入 API、模型、快捷键和开机自启配置。
+- v1.0.1 体积优化版移除 OpenAI SDK，改用 httpx 直连 OpenAI-compatible API，并裁剪未使用的 Qt 可选组件；单文件 EXE 从约 49 MB 降至约 23 MB，未使用 UPX，降低安全软件误报风险。
 
 ## 开源许可
 
