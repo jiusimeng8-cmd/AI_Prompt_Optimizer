@@ -46,10 +46,47 @@ a = Analysis(
         'cryptography.hazmat.backends.openssl',
         'onnxruntime',
         'fsspec',
+        'openai',
+        'pydantic',
+        'pydantic_core',
+        'rich',
+        'pygments',
+        'PIL',
+        'Pillow',
+        'jiter',
+        'distro',
+        'sniffio',
+        'websockets',
     ],
     noarchive=False,
     optimize=0,
 )
+
+# PyQt6 hooks tend to collect optional Qt components that this app does not use.
+# Keep core widgets/platform/icon support, remove PDF/SVG/translation/software-OpenGL
+# payloads to reduce the one-file executable without changing app logic.
+def _is_optional_qt_payload(item):
+    name = item[0].replace('\\', '/').lower()
+    source = item[1].replace('\\', '/').lower() if len(item) > 1 else ''
+    target = f"{name} {source}"
+
+    optional_exact = (
+        'opengl32sw.dll',
+        'qt6pdf.dll',
+        'qt6svg.dll',
+        'qjpeg.dll',
+        'qwebp.dll',
+        'qtiff.dll',
+    )
+    if any(part in target for part in optional_exact):
+        return True
+    if '/translations/' in target and target.endswith('.qm'):
+        return True
+    return False
+
+
+a.binaries = [item for item in a.binaries if not _is_optional_qt_payload(item)]
+a.datas = [item for item in a.datas if not _is_optional_qt_payload(item)]
 
 pyz = PYZ(a.pure)
 
