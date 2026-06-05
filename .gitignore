@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# Local runtime data / logs
+logs/
+*.log
+.omo/
+
+# Build artifacts
+build/
+dist/
+
+# Local backups / temporary files
+ui_backup_*/
+*.bak
+*_patch.py
+HANDOVER.md
+
+# Local user config / secrets
+.env
+*.env
+config.json
+prompts.json
+*.key
+*.pem
+*.sqlite
+*.db
+
+# IDE / OS
+.vscode/
+.idea/
+Desktop.ini
+Thumbs.db
