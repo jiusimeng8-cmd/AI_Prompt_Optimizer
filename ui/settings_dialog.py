@@ -4,6 +4,8 @@
 
 import threading
 
+import httpx
+
 from PyQt6.QtWidgets import (
     QGraphicsDropShadowEffect,
     QDialog, QVBoxLayout, QHBoxLayout, QTabWidget,
@@ -13,7 +15,6 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QKeyEvent, QColor
-from openai import OpenAI
 
 from ui.apple_style import Colors, Spacing, Radius
 from PyQt6.QtWidgets import QCheckBox
@@ -303,10 +304,15 @@ class SettingsDialog(QDialog):
 
         def _fetch():
             try:
-                client = OpenAI(base_url=base_url, api_key=api_key)
-                models = client.models.list()
+                response = httpx.get(
+                    f"{base_url.rstrip('/')}/models",
+                    headers={"Authorization": f"Bearer {api_key}"},
+                    timeout=30,
+                )
+                response.raise_for_status()
+                data = response.json()
                 model_ids = sorted(
-                    [m.id for m in models],
+                    [m.get("id", "") for m in data.get("data", []) if m.get("id")],
                     key=lambda x: (not x.startswith("gpt"), x)
                 )
                 self.fetch_finished.emit(model_ids, "")
