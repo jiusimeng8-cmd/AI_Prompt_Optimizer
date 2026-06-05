@@ -4,8 +4,10 @@ API 调用客户端 - 兼容 OpenAI 格式的大模型 API 调用
 
 import re
 import threading
+import json
 from typing import Callable, Optional
-from openai import OpenAI
+
+import httpx
 
 
 class APIClient:
@@ -13,13 +15,17 @@ class APIClient:
         self.config_manager = config_manager
         self._current_request = None
 
-    def _get_client(self) -> OpenAI:
-        """根据配置创建 OpenAI 客户端"""
+    def _get_headers(self) -> dict[str, str]:
         api_config = self.config_manager.get_api_config()
-        return OpenAI(
-            base_url=api_config.get("base_url", "https://api.openai.com/v1"),
-            api_key=api_config.get("api_key", ""),
-        )
+        return {
+            "Authorization": f"Bearer {api_config.get('api_key', '')}",
+            "Content-Type": "application/json",
+        }
+
+    def _get_url(self, path: str) -> str:
+        api_config = self.config_manager.get_api_config()
+        base_url = api_config.get("base_url", "https://api.openai.com/v1").rstrip("/")
+        return f"{base_url}/{path.lstrip('/')}"
 
     @staticmethod
     def _extract_brackets(text: str) -> str:
@@ -64,35 +70,54 @@ class APIClient:
 
         def _run():
             try:
-                client = self._get_client()
+                payload = {
+                    "model": api_config.get("model", "gpt-4o-mini"),
+                    "messages": messages,
+                    "max_tokens": max_tokens,
+                    "temperature": api_config.get("temperature", 0.7),
+                }
 
                 if on_stream:
                     # 流式调用
-                    stream = client.chat.completions.create(
-                        model=api_config.get("model", "gpt-4o-mini"),
-                        messages=messages,
-                        max_tokens=max_tokens,
-                        temperature=api_config.get("temperature", 0.7),
-                        stream=True,
-                    )
+                    payload["stream"] = True
                     full_response = ""
-                    for chunk in stream:
-                        if chunk.choices[0].delta.content:
-                            delta = chunk.choices[0].delta.content
-                            full_response += delta
-                            on_stream(delta)
+                    with httpx.Client(timeout=60) as client:
+                        with client.stream(
+                            "POST",
+                            self._get_url("chat/completions"),
+                            headers=self._get_headers(),
+                            json=payload,
+                        ) as response:
+                            response.raise_for_status()
+                            for line in response.iter_lines():
+                                if not line or not line.startswith("data: "):
+                                    continue
+                                data = line[6:].strip()
+                                if data == "[DONE]":
+                                    break
+                                parsed = json.loads(data)
+                                delta = (
+                                    parsed.get("choices", [{}])[0]
+                                    .get("delta", {})
+                                    .get("content")
+                                )
+                                if delta:
+                                    full_response += delta
+                                    on_stream(delta)
                     # 流式结束后截取「」内容
                     final = self._extract_brackets(full_response)
                     on_success(final)
                 else:
                     # 非流式调用
-                    response = client.chat.completions.create(
-                        model=api_config.get("model", "gpt-4o-mini"),
-                        messages=messages,
-                        max_tokens=max_tokens,
-                        temperature=api_config.get("temperature", 0.7),
-                    )
-                    result = response.choices[0].message.content
+                    with httpx.Client(timeout=60) as client:
+                        response = client.post(
+                            self._get_url("chat/completions"),
+                            headers=self._get_headers(),
+                            json=payload,
+                        )
+                        response.raise_for_status()
+                        data = response.json()
+                    result = data.get("choices", [{}])[0].get("message", {}).get("content", "")
                     # 截取「」内容
                     final = self._extract_brackets(result)
                     on_success(final)
