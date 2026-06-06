@@ -1,6 +1,18 @@
-# AI Prompt Optimizer
+# AI Prompt Optimizer - Windows AI Prompt 优化器
 
-一款 Windows 桌面工具，通过大模型 API（兼容 OpenAI 格式）优化文字并自动复制到剪切板。
+AI Prompt Optimizer 是一款开源 Windows 桌面 AI 写作与提示词优化工具，支持 OpenAI-compatible API、本地提示词模板管理、全局快捷键选中文本优化、自动复制/替换、系统托盘、开机自启和单文件 EXE 分发。它适合在 VS Code、Cursor、OpenCode、浏览器、文档编辑器、聊天窗口等场景中快速润色文本、重写提示词、优化 AI 指令和提升工作流效率。
+
+## SEO Keywords
+
+AI Prompt Optimizer, Windows AI tool, prompt optimizer, AI prompt enhancer, OpenAI compatible desktop app, global hotkey text replacement, AI writing assistant, prompt engineering tool, PyQt6 desktop app, Windows UI Automation, AI 文本优化工具, 提示词优化器, AI 写作助手, Windows 桌面 AI 工具, 全局快捷键文本优化, OpenAI 兼容 API 工具。
+
+## 适用场景
+
+- **AI 提示词优化**：把粗糙指令改写成更清晰、更结构化、更适合大模型执行的 Prompt。
+- **文本润色与改写**：对邮件、文案、需求说明、技术描述、聊天内容进行快速润色。
+- **编程工作流辅助**：在代码编辑器或 AI 编程工具中选中文本，一键优化为更明确的任务描述。
+- **多模型 API 工作台**：支持 OpenAI-compatible API，可连接 OpenAI、New API、中转 API 或其他兼容服务。
+- **轻量本地桌面工具**：无需浏览器插件，单文件 EXE，配置保存在本机用户目录。
 
 ## 功能概述
 
@@ -9,6 +21,16 @@
 3. **全局快捷键替换**：在任意软件的输入框中选中文本，按下快捷键，自动调用 AI 优化并替换原文本
 4. **快捷键自定义**：快捷键可自由配置
 5. **智能模型获取**：填写 API 地址和 Key 后，一键获取可用模型列表
+6. **安全选区识别**：优先使用 Windows UI Automation / Accessibility 读取真实选中文本，降低空选区误触发风险
+7. **系统托盘与开机自启**：关闭窗口后可驻留托盘，支持在设置页开启随 Windows 启动
+8. **轻量打包**：v1.0.1 单文件 EXE 约 23 MB，移除 OpenAI SDK，使用 httpx 直连 API
+
+## 为什么使用 AI Prompt Optimizer
+
+- **比复制粘贴更快**：选中文本后按快捷键即可优化并回填，减少切换窗口。
+- **比普通剪贴板工具更安全**：对高风险程序禁用不可靠剪贴板 fallback，避免无选区时误把当前行/当前块发给 API。
+- **比固定 Prompt 工具更灵活**：可维护多个提示词模板，适配润色、总结、改写、需求整理、代码任务描述等场景。
+- **比浏览器插件更独立**：本地桌面程序，支持系统托盘、开机自启和独立 API 配置。
 
 ## 核心流程
 
