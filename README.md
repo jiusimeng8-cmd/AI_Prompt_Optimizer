@@ -2,6 +2,8 @@
 
 AI Prompt Optimizer 是一款开源 Windows 桌面 AI 写作与提示词优化工具，支持 OpenAI-compatible API、本地提示词模板管理、全局快捷键选中文本优化、自动复制/替换、系统托盘、开机自启和单文件 EXE 分发。它适合在 VS Code、Cursor、OpenCode、浏览器、文档编辑器、聊天窗口等场景中快速润色文本、重写提示词、优化 AI 指令和提升工作流效率。
 
+AI Prompt Optimizer is an open-source Windows desktop AI writing and prompt optimization tool. It supports OpenAI-compatible APIs, local prompt template management, global-hotkey selected-text optimization, automatic copy/replace, system tray, autostart, and single-file EXE distribution. It is designed for quickly polishing text, rewriting prompts, improving AI instructions, and speeding up workflows in VS Code, Cursor, OpenCode, browsers, document editors, and chat windows.
+
 ## SEO Keywords
 
 AI Prompt Optimizer, Windows AI tool, prompt optimizer, AI prompt enhancer, OpenAI compatible desktop app, global hotkey text replacement, AI writing assistant, prompt engineering tool, PyQt6 desktop app, Windows UI Automation, AI 文本优化工具, 提示词优化器, AI 写作助手, Windows 桌面 AI 工具, 全局快捷键文本优化, OpenAI 兼容 API 工具。
@@ -14,6 +16,14 @@ AI Prompt Optimizer, Windows AI tool, prompt optimizer, AI prompt enhancer, Open
 - **多模型 API 工作台**：支持 OpenAI-compatible API，可连接 OpenAI、New API、中转 API 或其他兼容服务。
 - **轻量本地桌面工具**：无需浏览器插件，单文件 EXE，配置保存在本机用户目录。
 
+## Use Cases
+
+- **AI prompt optimization**: Rewrite rough instructions into clearer, more structured prompts for large language models.
+- **Text polishing and rewriting**: Improve emails, copywriting, product requirements, technical notes, and chat messages.
+- **Coding workflow assistant**: Select text in code editors or AI coding tools and turn it into a clearer task description.
+- **OpenAI-compatible API workstation**: Connect to OpenAI, New API, proxy APIs, or other compatible model services.
+- **Lightweight local desktop utility**: No browser extension required; runs as a single-file EXE and stores configuration locally.
+
 ## 功能概述
 
 1. **文本优化**：输入文本（A）+ 自定义提示词模板（B）→ 调用大模型 API → 输出优化结果（C）→ 自动复制到剪切板
@@ -25,12 +35,30 @@ AI Prompt Optimizer, Windows AI tool, prompt optimizer, AI prompt enhancer, Open
 7. **系统托盘与开机自启**：关闭窗口后可驻留托盘，支持在设置页开启随 Windows 启动
 8. **轻量打包**：v1.0.1 单文件 EXE 约 23 MB，移除 OpenAI SDK，使用 httpx 直连 API
 
+## Features
+
+1. **AI text optimization**: Combine user text with a custom prompt template, call an OpenAI-compatible API, and copy the optimized result automatically.
+2. **Prompt template management**: Create, edit, save, and switch between multiple prompt templates.
+3. **Global hotkey replacement**: Select text in another application, press a hotkey, optimize it with AI, and replace the original text.
+4. **Custom hotkeys**: Configure the global hotkey from the settings page.
+5. **Model discovery**: Fetch available models after entering the API base URL and API key.
+6. **Safer selection capture**: Prefer Windows UI Automation / Accessibility to read real selected text and reduce empty-selection false triggers.
+7. **Tray and autostart**: Minimize to system tray and optionally start with Windows.
+8. **Small single-file build**: v1.0.1 is about 23 MB, using direct httpx OpenAI-compatible requests instead of the OpenAI SDK.
+
 ## 为什么使用 AI Prompt Optimizer
 
 - **比复制粘贴更快**：选中文本后按快捷键即可优化并回填，减少切换窗口。
 - **比普通剪贴板工具更安全**：对高风险程序禁用不可靠剪贴板 fallback，避免无选区时误把当前行/当前块发给 API。
 - **比固定 Prompt 工具更灵活**：可维护多个提示词模板，适配润色、总结、改写、需求整理、代码任务描述等场景。
 - **比浏览器插件更独立**：本地桌面程序，支持系统托盘、开机自启和独立 API 配置。
+
+## Why Use AI Prompt Optimizer
+
+- **Faster than manual copy-paste**: Select text and press a hotkey to optimize and write it back.
+- **Safer than basic clipboard tools**: Clipboard fallback is disabled for high-risk apps to avoid sending current-line/current-block text when nothing is selected.
+- **More flexible than a fixed prompt tool**: Maintain multiple templates for polishing, summarizing, rewriting, requirement drafting, and coding-task refinement.
+- **More independent than a browser extension**: Runs locally as a Windows desktop app with tray support, autostart, and dedicated API settings.
 
 ## 核心流程
 
